@@ -23,43 +23,53 @@ const handleSignUpClick = () => {
   const database = [
     {
       username: "user1",
-      password: "pass1"
+      password: "pass1",
+      email: "aayildiz@email.com"
     },
     {
       username: "user2",
-      password: "pass2"
+      password: "pass2",
+      email: "ntan@email.com"
+
     }
   ];
-
   const errors = {
     uname: "invalid username",
-    pass: "wrong password"
+    pass: "wrong password",
+    uemail: "wrong email"
   };
 
-  const handleSubmit = (event) => {
-    //Prevent page reload
-    event.preventDefault();
+const handleSubmit = (event) => {
+  event.preventDefault();
 
-    // formdan gelen bilgiler deconstruct
-    var { uname, pass } = document.forms[0];
+  const formData = new FormData(event.target);
+  const unameOrEmail = formData.get("unameOrEmail");
+  const pass = formData.get("pass");
 
-    // Find user login info
-    const userData = database.find((user) => user.username === uname.value);
+  const userData = database.find(
+    (user) => user.username === unameOrEmail || user.email === unameOrEmail
+  );
 
-    // Compare user info
-    if (userData) {
-      if (userData.password !== pass.value) {
-        // Invalid password
-        setErrorMessages({ name: "pass", message: errors.pass });
-      } else {
-        setIsSubmitted(true);
-      }
+  if (userData) {
+    if (userData.password !== pass) {
+      setErrorMessages({ name: "pass", message: errors.pass });
     } else {
-      // Username not found
-      setErrorMessages({ name: "uname", message: errors.uname });
+      setErrorMessages({});
     }
-  };
+  } else {
+    if (unameOrEmail.includes("@")) {
+      setErrorMessages({ name: "unameOrEmail", message: errors.email });
+    } else {
+      setErrorMessages({ name: "unameOrEmail", message: errors.uname });
+    }
+  }
+  // Clear the form fields after submission
+  event.target.reset();
 
+  if (Object.keys(errorMessages).length === 0) {
+    setIsSubmitted(true);
+  }
+};
   // Generate JSX code for error message
   const renderErrorMessage = (name) =>
     name === errorMessages.name && (
@@ -71,8 +81,8 @@ const handleSignUpClick = () => {
     <div className="form">
       <form onSubmit={handleSubmit}>
         <div className="input-container">
-          <label>Username </label>
-          <input type="text" name="uname" required />
+          <label>Username or Email</label>
+          <input type="text" name="unameOrEmail" required />
           {renderErrorMessage("uname")}
         </div>
         <div className="input-container">
@@ -81,7 +91,7 @@ const handleSignUpClick = () => {
           {renderErrorMessage("pass")}
         </div>
         <div className="button-container">
-          <input type="submit" />
+          <input type="submit" value="Submit" />
         </div>
       </form>
     </div>
@@ -105,7 +115,7 @@ const handleSignUpClick = () => {
             {renderErrorMessage("pass")}
           </div>
           <div className="button-container">
-            <input type="submit" />
+            <input type="submit" value="Submit" />
           </div>
         </form>
       </div>
