@@ -20,7 +20,7 @@ module.exports = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ["@babel/preset-env", "@babel/preset-react"],
+                        presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
                     },
                 },
             },
@@ -31,7 +31,7 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: [".js", ".jsx", "ts", "tsx"], // in order to import without ./App.jsx 
+        extensions: [".js", ".jsx", ".ts", ".tsx"], // in order to import without ./App.jsx 
         alias: {
             //map the buffer module to a browser compatible version
             buffer: "buffer-es6",
